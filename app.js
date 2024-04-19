@@ -9,7 +9,7 @@ dotenv.config();
 
 connectDB();
 
-app.listen(3000, () => {
+app.listen(10000, () => {
   console.log("sunucu çalışıyor");
   app.use("/users", UserRoutes.router);
   app.get("/", (req, res) => {
