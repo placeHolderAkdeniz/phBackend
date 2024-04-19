@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "crypto-js": "^4.2.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
+    "http-status": "^1.7.4",
+    "joi": "^17.12.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.3.1",
+    "nodemailer": "^6.9.13",
+    "nodemon": "^3.1.0",
+    "uuid": "^9.0.1"
+  },
+  "name": "placeholder",
+  "version": "1.0.0",
+  "main": "app.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "author": "mustafa",
+  "license": "ISC",
+  "description": ""
+}

@@ -1,0 +1,27 @@
+# Node.js geçici dosyaları
+node_modules/
+
+# Yerel yapılandırma dosyaları
+.env
+
+# Derleme ve geçici dosyalar
+/build/
+/dist/
+/out/
+/.next/
+/.nuxt/
+/.vercel/
+/.now/
+
+# IDE/Editor özel dosyaları
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Sistem dosyaları
+.DS_Store
+Thumbs.db
