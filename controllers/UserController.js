@@ -2,15 +2,24 @@ const UserService = require("../services/UserService");
 const httpStatus = require("http-status");
 const { passwordToHash, generateAccessToken, generateRefreshToken } = require("../scripts/helper");
 
-const createUser = (req, res) => {
-  req.body.password = passwordToHash(req.body.password);
-  UserService.createUser(req.body)
-    .then((response) => {
-      res.status(httpStatus.CREATED).send(response);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+const createUser = async (req, res) => {
+  if (req.body.email) {
+    const user = await UserService.findOneUser({ email: req.body.email });
+    if (user) {
+      console.log("a");
+      return res.status(httpStatus.CONFLICT).send({ msg: "requested email already taken" });
+    } else {
+      console.log("dfsfs");
+      req.body.password = passwordToHash(req.body.password);
+      UserService.createUser(req.body)
+        .then((response) => {
+          res.status(httpStatus.CREATED).send(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
 };
 
 const index = (req, res) => {
