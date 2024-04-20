@@ -1,4 +1,5 @@
 const UserService = require("../services/UserService");
+const CommentService = require("../services/CommentService");
 const httpStatus = require("http-status");
 const { passwordToHash, generateAccessToken, generateRefreshToken } = require("../scripts/helper");
 
@@ -95,4 +96,19 @@ const changePassword = (req, res) => {
         .send({ error: "Update güncelleme işlemi sırasında bir problem oluştu" });
     });
 };
-module.exports = { index, createUser, login, update, changePassword };
+
+const userCommentList = (req, res) => {
+  try {
+    CommentService.listComment({ user: req.user?._id }).then((response) => {
+      if (response) {
+        return res.status(httpStatus.OK).send({ comments: response });
+      } else {
+        return res.status(httpStatus.NOT_FOUND).send({ msg: "No user comments found" });
+      }
+    });
+  } catch (error) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ error });
+  }
+};
+
+module.exports = { index, createUser, login, update, changePassword, userCommentList };
