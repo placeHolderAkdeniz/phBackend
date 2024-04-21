@@ -5,8 +5,12 @@ const UserRoutes = require("./routes/UserRoute");
 const HotelRoutes = require("./routes/HotelRoute");
 const CommentRoutes = require("./routes/CommentRoute");
 const httpStatus = require("http-status");
+const cors = require("cors");
+
 const app = express();
+app.use(cors());
 app.use(express.json());
+
 dotenv.config();
 
 connectDB();

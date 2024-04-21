@@ -5,10 +5,15 @@ const createHotel = (data) => {
 };
 
 const listHotel = (where) => {
-  return HotelModel.find(where || {}).populate({
-    path: "comments",
-    select: "value likes",
-  });
+  return HotelModel.find(where || {});
+  // .populate({
+  //   path: "hotelImages",
+  //   select: "name",
+  // });
+  // .populate({
+  //   path: "comments",
+  //   select: "value likes",
+  // })
 };
 
 const updateHotel = () => {
@@ -18,4 +23,4 @@ const updateHotel = () => {
 const deleteHotel = (id) => {
   return HotelModel.findByIdAndDelete(id);
 };
-module.exports = { createHotel };
+module.exports = { createHotel, listHotel };

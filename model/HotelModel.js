@@ -29,6 +29,7 @@ const HotelSchema = new Mongoose.Schema(
         ref: "reservation",
       },
     ],
+
     // image: {
     //   type: String,
     //   required: true,
