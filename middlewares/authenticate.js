@@ -14,7 +14,7 @@ const authenticateToken = (req, res, next) => {
       }
       // console.log(user);
       req.user = user?._doc;
-
+      console.log(user);
       next();
     });
   }

@@ -28,6 +28,13 @@ const createHotel = async (req, res) => {
       });
       if (savedImage) {
         console.log("Otel ve resim başarıyla kaydedildi");
+        console.log(savedImage._id);
+        const updatedHotel = await HotelService.updateHotel({ _id: hotel._id }, { image: savedImage._id });
+        if (updatedHotel) {
+          return res.status(httpStatus.OK).send(updatedHotel);
+        } else {
+          console.log("update error");
+        }
       }
     } else {
       console.log("without file");
@@ -40,7 +47,18 @@ const createHotel = async (req, res) => {
 };
 
 const index = async (req, res) => {
-  const hotel = await HotelService.listHotel();
+  if (req.query.city == "all") {
+    console.log(req.query);
+  }
+  if (req.query != "all") {
+    req.body.city = req.query.city;
+  }
+  if (!req.query.city) {
+    console.log("sss");
+    req.body = req.user?.city;
+  }
+
+  const hotel = await HotelService.listHotel(req.body);
   if (hotel) {
     res.status(httpStatus.OK).send(hotel);
   } else {
@@ -48,7 +66,7 @@ const index = async (req, res) => {
   }
 };
 
-const hotelIamgeList = (req, res) => {
+const hotelImageList = (req, res) => {
   try {
     HotelImageService.listComment({ user: req.user?._id }).then((response) => {
       if (response) {

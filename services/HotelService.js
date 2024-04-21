@@ -5,22 +5,22 @@ const createHotel = (data) => {
 };
 
 const listHotel = (where) => {
-  return HotelModel.find(where || {});
-  // .populate({
-  //   path: "hotelImages",
-  //   select: "name",
-  // });
-  // .populate({
-  //   path: "comments",
-  //   select: "value likes",
-  // })
+  return HotelModel.find(where || {})
+    .populate({
+      path: "image",
+      select: "name image",
+    })
+    .populate({
+      path: "comments",
+      select: "value likes",
+    });
 };
 
-const updateHotel = () => {
+const updateHotel = (where, data) => {
   return HotelModel.findOneAndUpdate(where, data, { new: true });
 };
 
 const deleteHotel = (id) => {
   return HotelModel.findByIdAndDelete(id);
 };
-module.exports = { createHotel, listHotel };
+module.exports = { createHotel, listHotel, updateHotel };
