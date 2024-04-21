@@ -7,10 +7,15 @@ const CommentSchema = new Mongoose.Schema(
       required: true,
     },
     likes: {
-      type: number,
+      type: Number,
       required: false,
       default: 0,
     },
+    user: {
+      type: Mongoose.Schema.Types.ObjectId,
+      ref: "user",
+    },
+    hotel: { type: Mongoose.Schema.Types.ObjectId, ref: "hotel" },
   },
   { versionKey: false, timestamps: true }
 );

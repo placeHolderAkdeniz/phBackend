@@ -19,7 +19,7 @@ const HotelSchema = new Mongoose.Schema(
       required: true,
     },
     stars: {
-      type: number,
+      type: Number,
       required: false,
       default: 0,
     },
@@ -29,10 +29,16 @@ const HotelSchema = new Mongoose.Schema(
         ref: "reservation",
       },
     ],
-    comments: {
-      type: Mongoose.Schema.Types.ObjectId,
-      ref: "comment",
-    },
+
+    // image: {
+    //   type: String,
+    //   required: true,
+    // },
+
+    // comments: {
+    //   type: Mongoose.Schema.Types.ObjectId,
+    //   ref: "comment",
+    // },
   },
   { versionKey: false, timestamps: true }
 );
