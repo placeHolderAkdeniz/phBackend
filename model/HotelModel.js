@@ -10,7 +10,11 @@ const HotelSchema = new Mongoose.Schema(
       type: String,
       required: true,
     },
-    address: {
+    city: {
+      type: String,
+      required: true,
+    },
+    country: {
       type: String,
       required: true,
     },
@@ -29,16 +33,20 @@ const HotelSchema = new Mongoose.Schema(
         ref: "reservation",
       },
     ],
+    image: {
+      type: Mongoose.Schema.Types.ObjectId,
+      ref: "hotelImage",
+    },
 
     // image: {
     //   type: String,
     //   required: true,
     // },
 
-    // comments: {
-    //   type: Mongoose.Schema.Types.ObjectId,
-    //   ref: "comment",
-    // },
+    comments: {
+      type: Mongoose.Schema.Types.ObjectId,
+      ref: "comment",
+    },
   },
   { versionKey: false, timestamps: true }
 );
