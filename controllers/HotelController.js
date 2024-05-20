@@ -4,8 +4,10 @@ const httpStatus = require("http-status");
 const fs = require("fs");
 
 const createHotel = async (req, res) => {
-  console.log(req.body.hotel_name);
-
+  if (req.user.isAdmin == false || req.user.isAdmin == null) {
+    return res.status(httpStatus.NOT_ACCEPTABLE).send({ msg: "you dont have a permission to do that" });
+  }
+  req.body.ownerEmail = req.user.email;
   try {
     const hotel = await HotelService.createHotel(req.body);
 

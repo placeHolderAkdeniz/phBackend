@@ -1,7 +1,9 @@
 const Mongoose = require("mongoose");
 
+//  Define User schema
 const UserSchema = new Mongoose.Schema(
   {
+    // Defined fields for user data
     first_name: {
       type: String,
       required: true,
@@ -42,6 +44,10 @@ const UserSchema = new Mongoose.Schema(
       type: String,
       default: "silver",
     },
+    isAdmin: {
+      type: Boolean,
+      required: true,
+    },
     reservations: [
       {
         type: Mongoose.Types.ObjectId,
@@ -61,6 +67,8 @@ const UserSchema = new Mongoose.Schema(
       },
     ],
   },
+  // Set options for schema
   { versionKey: false, timestamps: true }
 );
+
 module.exports = Mongoose.model("user", UserSchema);

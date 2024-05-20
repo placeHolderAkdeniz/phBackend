@@ -3,6 +3,9 @@ const HotelModel = require("../model/HotelModel");
 const createHotel = (data) => {
   return new HotelModel(data).save();
 };
+const deleteHotel = (where) => {
+  return HotelModel.findOneAndDelete(where);
+};
 
 const listHotel = (where) => {
   return HotelModel.find(where || {})
@@ -20,7 +23,4 @@ const updateHotel = (where, data) => {
   return HotelModel.findOneAndUpdate(where, data, { new: true });
 };
 
-const deleteHotel = (id) => {
-  return HotelModel.findByIdAndDelete(id);
-};
-module.exports = { createHotel, listHotel, updateHotel };
+module.exports = { createHotel, listHotel, updateHotel, deleteHotel };

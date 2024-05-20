@@ -27,6 +27,10 @@ const HotelSchema = new Mongoose.Schema(
       required: false,
       default: 0,
     },
+    ownerEmail: {
+      type: String,
+      required: true,
+    },
     reservations: [
       {
         type: Mongoose.Types.ObjectId,
@@ -37,15 +41,13 @@ const HotelSchema = new Mongoose.Schema(
       type: Mongoose.Schema.Types.ObjectId,
       ref: "hotelImage",
     },
-
-    // image: {
-    //   type: String,
-    //   required: true,
-    // },
-
     comments: {
       type: Mongoose.Schema.Types.ObjectId,
       ref: "comment",
+    },
+    rooms: {
+      type: Mongoose.Schema.Types.ObjectId,
+      ref: "room",
     },
   },
   { versionKey: false, timestamps: true }
