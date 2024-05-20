@@ -12,7 +12,6 @@ const RoomSchema = new Mongoose.Schema(
       default: 1,
     },
 
-    type: String,
     price: Number,
     capacity: Number,
   },

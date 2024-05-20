@@ -1,5 +1,6 @@
 const express = require("express");
 const { createHotel, index } = require("../controllers/HotelController");
+const RoomController = require("../controllers/RoomController");
 const authenticate = require("../middlewares/authenticate");
 const router = express.Router();
 const multer = require("multer");
@@ -15,7 +16,10 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.route("/").get(index);
+
+router.route("/rooms").get(RoomController.index);
 router.route("/images").get(index);
+
 router.route("/").post(authenticate, upload.single("file"), createHotel);
 
 module.exports = { router };

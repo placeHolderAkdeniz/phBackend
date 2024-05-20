@@ -3,7 +3,11 @@ const httpStatus = require("http-status");
 const HotelService = require("../services/HotelService");
 
 const index = async (req, res) => {
-  const rooms = await RoomService.listComment();
+  req.body.hotel = null;
+  if (req.query.hotelId != null) {
+    req.body.hotel = req.query.hotelId;
+  }
+  const rooms = await RoomService.listRoom({ hotel: req.body.hotel });
   if (rooms) {
     return res.status(httpStatus.OK).send(rooms);
   }
@@ -11,7 +15,7 @@ const index = async (req, res) => {
 };
 
 const createRoom = async (req, res) => {
-  if (req.user.isAdmin == true) {
+  if (req.user.isAdmin != true) {
     return res.status(httpStatus.NOT_ACCEPTABLE).send({ msg: "you dont have a permission to do that" });
   }
   req.body.user = req.user?._id;
