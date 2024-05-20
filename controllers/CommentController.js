@@ -11,7 +11,7 @@ const index = async (req, res) => {
 };
 
 const createComment = async (req, res) => {
-  if (req.user.isAdmin == true) {
+  if (req.user.isAdmin != true) {
     return res.status(httpStatus.NOT_ACCEPTABLE).send({ msg: "you dont have a permission to do that" });
   }
   req.body.user = req.user?._id;

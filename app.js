@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const { connectDB } = require("./loaders/db");
 const UserRoutes = require("./routes/UserRoute");
 const HotelRoutes = require("./routes/HotelRoute");
+const RoomRoutes = require("./routes/RoomRoute");
 const CommentRoutes = require("./routes/CommentRoute");
 const httpStatus = require("http-status");
 const cors = require("cors");
@@ -20,6 +21,7 @@ app.listen(10000, () => {
   app.use("/users", UserRoutes.router);
   app.use("/hotels", HotelRoutes.router);
   app.use("/comments", CommentRoutes.router);
+  app.use("/rooms", RoomRoutes.router);
   app.get("/", (req, res) => {
     res.status(httpStatus.OK).send("PLACEHOLDER'A HOŞGELDİNİZ!");
   });

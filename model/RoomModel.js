@@ -7,6 +7,11 @@ const RoomSchema = new Mongoose.Schema(
       ref: "hotel",
       required: true,
     },
+    roomStatus: {
+      type: Boolean,
+      default: 1,
+    },
+
     type: String,
     price: Number,
     capacity: Number,
