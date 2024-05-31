@@ -1,5 +1,5 @@
 const express = require("express");
-const { createRoom, deleteRoom, index } = require("../controllers/RoomController");
+const { createRoom, deleteRoom, index, searchRoom } = require("../controllers/RoomController");
 const authenticate = require("../middlewares/authenticate");
 const router = express.Router();
 const multer = require("multer");
@@ -15,6 +15,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.route("/").get(index);
+router.route("/search-rooms").get(searchRoom);
 router.route("/images").get(index);
 router.route("/").post(authenticate, upload.single("file"), createRoom);
 

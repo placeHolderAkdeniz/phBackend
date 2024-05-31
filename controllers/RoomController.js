@@ -1,6 +1,7 @@
 const RoomService = require("../services/RoomService");
 const httpStatus = require("http-status");
 const HotelService = require("../services/HotelService");
+const ReservationService = require("../services/ReservationService");
 
 const index = async (req, res) => {
   req.body.hotel = null;
@@ -25,13 +26,11 @@ const createRoom = async (req, res) => {
   try {
     const room = await RoomService.createRoom(req.body);
     if (room) {
-      console.log("a");
       const hotelWithRoom = await HotelService.updateHotel({ _id: req.body.hotel }, { rooms: room._id });
       if (hotelWithRoom) {
         return res.status(httpStatus.OK).send(room);
       }
     } else {
-      console.log("b");
     }
   } catch (error) {
     console.log(error);
@@ -47,4 +46,38 @@ const deleteRoom = async (req, res) => {
   res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ msg: "yorum silinirken bir hatayla karşılaşıldı!" });
 };
 
-module.exports = { createRoom, index, deleteRoom };
+const searchRoom = async (req, res) => {
+  try {
+    const hotels = await HotelService.listHotel({ city: req.body.city });
+
+    // Tüm otellerin odalarını paralel olarak getiriyoruz
+    const allRoomsPromises = hotels.map((hotel) =>
+      RoomService.listRoom({ hotel: hotel._id, capacity: req.body.personCount })
+    );
+    const allRoomsArray = await Promise.all(allRoomsPromises);
+
+    const allRooms = allRoomsArray.flat(); // Tüm oda listelerini tek bir diziye düzleştirir
+
+    // Tüm odaların uygunluk kontrolünü paralel olarak yapıyoruz
+    const suitableRoomsPromises = allRooms.map(async (room) => {
+      const isAvailable = await ReservationService.isRoomAvailable({
+        roomId: room._id,
+        checkInDate: req.body.checkInDate,
+        checkOutDate: req.body.checkOutDate,
+        capacity: req.body.personCount,
+      });
+      return isAvailable.length === 0 ? room : null;
+    });
+
+    // Uygun odaları filtreliyoruz
+    const suitableRoomsResults = await Promise.all(suitableRoomsPromises);
+    const suitableRooms = suitableRoomsResults.filter((room) => room !== null);
+
+    res.status(200).json(suitableRooms);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while searching for rooms." });
+  }
+};
+
+module.exports = { createRoom, index, deleteRoom, searchRoom };

@@ -7,6 +7,11 @@ const ReservationSchema = new Mongoose.Schema(
       ref: "room",
       required: true,
     },
+    user: {
+      type: Mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
     checkInDate: {
       type: Date,
       required: true,

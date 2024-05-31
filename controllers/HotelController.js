@@ -10,6 +10,7 @@ const createHotel = async (req, res) => {
   req.body.ownerEmail = req.user.email;
   try {
     const hotel = await HotelService.createHotel(req.body);
+    console.log(req.file);
 
     if (!hotel) {
       return res.status(httpStatus.BAD_REQUEST).send({ error: "Otel oluşturulamadı" });
@@ -23,10 +24,7 @@ const createHotel = async (req, res) => {
       const savedImage = await HotelImageService.uploadHotelImage({
         hotel: hotel._id,
         name: req.file.originalname,
-        image: {
-          data: fs.readFileSync(req.file.path),
-          contentType: req.file.mimetype,
-        },
+        path: req.file.path,
       });
       if (savedImage) {
         console.log("Otel ve resim başarıyla kaydedildi");

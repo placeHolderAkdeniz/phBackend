@@ -10,10 +10,7 @@ const HotelImageSchema = new Mongoose.Schema({
   name: {
     type: String,
   },
-  image: {
-    data: Buffer,
-    contentType: String,
-  },
+  path: String,
   hotel: {
     type: Mongoose.Schema.Types.ObjectId,
     ref: "hotel",

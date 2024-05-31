@@ -5,6 +5,8 @@ const UserRoutes = require("./routes/UserRoute");
 const HotelRoutes = require("./routes/HotelRoute");
 const RoomRoutes = require("./routes/RoomRoute");
 const CommentRoutes = require("./routes/CommentRoute");
+const ReservationRoute = require("./routes/ReservationRoute");
+
 const httpStatus = require("http-status");
 const cors = require("cors");
 
@@ -22,6 +24,7 @@ app.listen(10000, () => {
   app.use("/hotels", HotelRoutes.router);
   app.use("/comments", CommentRoutes.router);
   app.use("/rooms", RoomRoutes.router);
+  app.use("/bookings", ReservationRoute.router);
   app.get("/", (req, res) => {
     res.status(httpStatus.OK).send("PLACEHOLDER'A HOŞGELDİNİZ!");
   });

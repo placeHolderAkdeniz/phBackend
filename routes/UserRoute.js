@@ -8,12 +8,14 @@ const {
   userCommentList,
   deleteUser,
   getMyHotel,
+  userReservation,
 } = require("../controllers/UserController");
 const authenticate = require("../middlewares/authenticate");
 const router = express.Router();
 
 // Implemented endpoint to retrieve all users
 router.route("/").get(index);
+router.route("/my-bookings").get(authenticate, userReservation);
 router.route("/my-hotel").get(authenticate, getMyHotel);
 // Implemented endpoint to retrieve comments of authenticated user
 router.route("/comments").get(authenticate, userCommentList);

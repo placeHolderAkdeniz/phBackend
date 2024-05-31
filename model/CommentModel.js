@@ -6,6 +6,18 @@ const CommentSchema = new Mongoose.Schema(
       type: String,
       required: true,
     },
+    hygiene_star: {
+      type: Number,
+      required: true,
+    },
+    safety_star: {
+      type: Number,
+      required: true,
+    },
+    transportation_star: {
+      type: Number,
+      required: true,
+    },
     likes: {
       type: Number,
       required: false,

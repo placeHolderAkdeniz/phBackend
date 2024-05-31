@@ -22,7 +22,22 @@ const HotelSchema = new Mongoose.Schema(
       type: String,
       required: true,
     },
-    stars: {
+    average_star: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
+    hygiene_star: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
+    safety_star: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
+    transportation_star: {
       type: Number,
       required: false,
       default: 0,
@@ -41,10 +56,12 @@ const HotelSchema = new Mongoose.Schema(
       type: Mongoose.Schema.Types.ObjectId,
       ref: "hotelImage",
     },
-    comments: {
-      type: Mongoose.Schema.Types.ObjectId,
-      ref: "comment",
-    },
+    comments: [
+      {
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: "comment",
+      },
+    ],
     rooms: {
       type: Mongoose.Schema.Types.ObjectId,
       ref: "room",
