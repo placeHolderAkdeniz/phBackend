@@ -3,7 +3,6 @@ const { createHotel, index } = require("../controllers/HotelController");
 const RoomController = require("../controllers/RoomController");
 const authenticate = require("../middlewares/authenticate");
 const router = express.Router();
-
 const multer = require("multer");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
