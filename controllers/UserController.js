@@ -1,6 +1,7 @@
 const UserService = require("../services/UserService");
 const CommentService = require("../services/CommentService");
 const HotelService = require("../services/HotelService");
+const ReservationService = require("../services/ReservationService");
 const httpStatus = require("http-status");
 const { passwordToHash, generateAccessToken, generateRefreshToken } = require("../scripts/helper");
 
@@ -98,6 +99,16 @@ const update = (req, res) => {
     });
 };
 
+const userReservation = (req, res) => {
+  if (req.user._id) {
+    ReservationService.findUserReservations({ user: req.user._id }).then((response) => {
+      if (response) {
+        return res.status(httpStatus.OK).send(response);
+      }
+    });
+  }
+};
+
 //  Implement password change controller
 const changePassword = (req, res) => {
   req.body.password = passwordToHash(req.body.password);
@@ -154,4 +165,14 @@ const deleteUser = async (req, res) => {
     .catch((e) => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(e));
 };
 
-module.exports = { index, createUser, login, update, changePassword, userCommentList, deleteUser, getMyHotel };
+module.exports = {
+  index,
+  createUser,
+  login,
+  update,
+  changePassword,
+  userCommentList,
+  deleteUser,
+  getMyHotel,
+  userReservation,
+};
