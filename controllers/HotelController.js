@@ -1,7 +1,6 @@
 const HotelService = require("../services/HotelService");
 const HotelImageService = require("../services/HotelImageService");
 const httpStatus = require("http-status");
-const fs = require("fs");
 
 const createHotel = async (req, res) => {
   if (req.user.isAdmin == false || req.user.isAdmin == null) {
@@ -24,7 +23,7 @@ const createHotel = async (req, res) => {
       const savedImage = await HotelImageService.uploadHotelImage({
         hotel: hotel._id,
         name: req.file.originalname,
-        path: req.file.path,
+        path: req.file.originalname,
       });
       if (savedImage) {
         console.log("Otel ve resim başarıyla kaydedildi");
