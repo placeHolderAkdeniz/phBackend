@@ -66,6 +66,11 @@ const HotelSchema = new Mongoose.Schema(
       type: Mongoose.Schema.Types.ObjectId,
       ref: "room",
     },
+    features: [
+      {
+        type: String,
+      },
+    ],
   },
   { versionKey: false, timestamps: true }
 );
