@@ -73,7 +73,18 @@ const searchRoom = async (req, res) => {
     const suitableRoomsResults = await Promise.all(suitableRoomsPromises);
     const suitableRooms = suitableRoomsResults.filter((room) => room !== null);
 
-    res.status(200).json(suitableRooms);
+    // Aynı otelde olan odalardan sadece bir tanesini döndürmek için filtreleme yapıyoruz
+    const uniqueRooms = [];
+    const seenHotels = new Set();
+
+    for (const room of suitableRooms) {
+      if (!seenHotels.has(room.hotel.toString())) {
+        uniqueRooms.push(room);
+        seenHotels.add(room.hotel.toString());
+      }
+    }
+
+    res.status(200).json(uniqueRooms);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occurred while searching for rooms." });

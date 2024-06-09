@@ -37,10 +37,23 @@ const index = (req, res) => {
     })
     .catch((e) => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(e));
 };
+
 const addFavourite = async (req, res) => {
   try {
     const user = await UserService.findOneUser({ _id: req.user._id });
     user.favorites.push(req.body.hotelId);
+
+    const response = await user.save();
+    res.status(httpStatus.OK).send(response);
+  } catch (error) {
+    console.log(error);
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error);
+  }
+};
+const deleteFavourite = async (req, res) => {
+  try {
+    const user = await UserService.findOneUser({ _id: req.user._id });
+    user.favorites.pull(req.body.hotelId);
 
     const response = await user.save();
     res.status(httpStatus.OK).send(response);
@@ -204,4 +217,5 @@ module.exports = {
   getMyHotel,
   userReservation,
   addFavourite,
+  deleteFavourite,
 };

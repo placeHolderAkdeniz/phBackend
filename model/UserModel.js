@@ -40,6 +40,10 @@ const UserSchema = new Mongoose.Schema(
       type: String,
       required: true,
     },
+    userPoint: {
+      type: Number,
+      default: 0,
+    },
     userType: {
       type: String,
       default: "silver",

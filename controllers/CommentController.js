@@ -1,7 +1,8 @@
 const CommentService = require("../services/CommentService");
 const httpStatus = require("http-status");
 const HotelService = require("../services/HotelService");
-
+const ReservationService = require("../services/ReservationService");
+const RoomService = require("../services/RoomService");
 const startCoefficient = {
   silver: 1,
   gold: 2,

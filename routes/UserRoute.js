@@ -10,6 +10,7 @@ const {
   getMyHotel,
   userReservation,
   addFavourite,
+  deleteFavourite,
 } = require("../controllers/UserController");
 const authenticate = require("../middlewares/authenticate");
 const router = express.Router();
@@ -34,4 +35,5 @@ router.route("/change-password").patch(authenticate, changePassword);
 // Implemented endpoint for updating user information
 router.route("/").patch(authenticate, update);
 router.route("/").delete(authenticate, deleteUser);
+router.route("/favorites").delete(authenticate, deleteFavourite);
 module.exports = { router };
