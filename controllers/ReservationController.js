@@ -49,7 +49,7 @@ const isRoomAvailable = async (req, res) => {
 
   try {
     // İlgili oteldeki tüm odaları getir
-    const findRoom = await RoomService.listRoom({ hotel: req.body.hotelId });
+    const findRoom = await RoomService.listRoom({ hotel: req.body.hotelId, capacity: req.body.personCount });
 
     // Her oda için uygunluk kontrolü yap
     const availableRoomsPromises = findRoom.map(async (room) => {
