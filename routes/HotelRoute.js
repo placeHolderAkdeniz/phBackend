@@ -1,8 +1,8 @@
 const express = require("express");
-const { createHotel, index } = require("../controllers/HotelController");
+const { createHotel, index, hotelCommentList } = require("../controllers/HotelController");
 const RoomController = require("../controllers/RoomController");
 const authenticate = require("../middlewares/authenticate");
-const router = express.Router();
+
 const multer = require("multer");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -14,9 +14,9 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
-
+const router = express.Router();
 router.route("/").get(index);
-
+router.route("/comments").get(hotelCommentList);
 router.route("/rooms").get(RoomController.index);
 router.route("/images").get(index);
 

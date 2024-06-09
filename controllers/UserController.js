@@ -37,6 +37,19 @@ const index = (req, res) => {
     })
     .catch((e) => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(e));
 };
+const addFavourite = async (req, res) => {
+  try {
+    const user = await UserService.findOneUser({ _id: req.user._id });
+    user.favorites.push(req.body.hotelId);
+
+    const response = await user.save();
+    res.status(httpStatus.OK).send(response);
+  } catch (error) {
+    console.log(error);
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error);
+  }
+};
+
 const getMyHotel = (req, res) => {
   HotelService.listHotel({ ownerEmail: req.user.email })
     .then((response) => {
@@ -128,17 +141,32 @@ const changePassword = (req, res) => {
 };
 
 //  Implement user comment list controller
-const userCommentList = (req, res) => {
+const userCommentList = async (req, res) => {
   try {
-    // Retrieve user comments
-    CommentService.listComment({ user: req.user?._id }).then((response) => {
-      if (response) {
-        return res.status(httpStatus.OK).send({ comments: response });
-      } else {
-        return res.status(httpStatus.NOT_FOUND).send({ msg: "No user comments found" });
-      }
-    });
+    // Kullanıcı yorumlarını al
+    const comments = await CommentService.listComment({ user: req.user?._id });
+
+    if (comments) {
+      // Yorumların her biri için otel bilgilerini al ve yeni bir dizi oluştur
+      const commentsWithHotelInfo = await Promise.all(
+        comments.map(async (comment) => {
+          // Yorumun ilgili otel bilgilerini al
+          const hotel = await HotelService.listHotel({ _id: comment.hotel });
+
+          return { ...comment._doc, hotelInfo: hotel[0] };
+        })
+      );
+
+      // Güncellenmiş yorumları konsola yazdır
+      //console.log(commentsWithHotelInfo);
+
+      // Güncellenmiş yorumları istemciye geri gönder
+      return res.status(httpStatus.OK).send({ comments: commentsWithHotelInfo });
+    } else {
+      return res.status(httpStatus.NOT_FOUND).send({ msg: "No user comments found" });
+    }
   } catch (error) {
+    console.error(error);
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ error });
   }
 };
@@ -175,4 +203,5 @@ module.exports = {
   deleteUser,
   getMyHotel,
   userReservation,
+  addFavourite,
 };
