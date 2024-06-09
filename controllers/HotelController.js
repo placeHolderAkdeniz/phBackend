@@ -1,5 +1,7 @@
 const HotelService = require("../services/HotelService");
 const HotelImageService = require("../services/HotelImageService");
+const CommentService = require("../services/CommentService");
+
 const httpStatus = require("http-status");
 
 const createHotel = async (req, res) => {
@@ -46,16 +48,18 @@ const createHotel = async (req, res) => {
 };
 
 const index = async (req, res) => {
-  if (req.query.city == "all") {
-    console.log(req.query);
-  }
-  if (req.query != "all") {
-    req.body.city = req.query.city;
-  }
-  if (!req.query.city) {
-    console.log("sss");
-    req.body = req.user?.city;
-  }
+  console.log(req.body);
+  // if (req.query.city == "all") {
+  //   console.log(req.query);
+  // }
+  // if (req.query != "all") {
+  //   req.body.city = req.query.city;
+  // }
+  // if (!req.query.city) {
+  //   console.log("sss");
+  //   req.body = req.user?.city;
+  // }
+  // console.log(req.query);
 
   const hotel = await HotelService.listHotel(req.body);
   if (hotel) {
@@ -65,6 +69,15 @@ const index = async (req, res) => {
   }
 };
 
+const hotelCommentList = (req, res) => {
+  CommentService.listComment({ hotel: req.body?.hotelId }).then((response) => {
+    if (response) {
+      return res.status(httpStatus.OK).send({ comments: response });
+    } else {
+      return res.status(httpStatus.NOT_FOUND).send({ msg: "No user comments found" });
+    }
+  });
+};
 const hotelImageList = (req, res) => {
   try {
     HotelImageService.listComment({ user: req.user?._id }).then((response) => {
@@ -79,4 +92,4 @@ const hotelImageList = (req, res) => {
   }
 };
 
-module.exports = { createHotel, index };
+module.exports = { createHotel, index, hotelCommentList };
