@@ -3,47 +3,6 @@ const UserService = require("../services/UserService");
 const RoomService = require("../services/RoomService");
 const httpStatus = require("http-status");
 
-// const isRoomAvailable = async (req, res) => {
-//   req.body.user = req.user._id;
-
-//   try {
-//     const findRoom = await RoomService({ hotel: req.body.hotelId });
-
-//     const isRoomAvailable = await ReservationService.isRoomAvailable(req.body);
-
-//     if (isRoomAvailable.length != 0) {
-//       return res
-//         .status(httpStatus.CONFLICT)
-//         .send({ success: false, message: "Room is not available for the selected dates." });
-//     } else {
-//       const newReservation = await ReservationService.createReservation(req.body);
-
-//       if (!newReservation) {
-//         return res
-//           .status(httpStatus.INTERNAL_SERVER_ERROR)
-//           .send({ success: false, message: "An error occurred while creating the reservation." });
-//       } else {
-//         const user = await UserService.findOneUser({ _id: req.user._id });
-//         user.userPoint = user.userPoint + 1;
-
-//         if (user.userPoint >= 10 && user.userPoint < 30) {
-//           user.userType = "gold";
-//         }
-//         if (user.userPoint >= 30) {
-//           user.userType = "emerald";
-//         }
-//         await user.save();
-
-//         return res
-//           .status(httpStatus.CREATED)
-//           .send({ succes: true, message: "Reservation created successfully." });
-//       }
-//     }
-//   } catch (error) {
-//     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ success: false, message: error });
-//   }
-// };
-
 const isRoomAvailable = async (req, res) => {
   req.body.user = req.user._id;
 
@@ -109,6 +68,43 @@ const isRoomAvailable = async (req, res) => {
   }
 };
 
+const deleteReservation = async (req, res) => {
+  try {
+    const deletedReservation = await ReservationService.findReservationAndDelete({
+      _id: req.body.reservationId,
+    });
+
+    if (deletedReservation) {
+      return res.status(httpStatus.OK).send({ msg: "reservation deleted successfully" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(httpStatus.BAD_GATEWAY)
+      .send({ msg: "An error was encountered while deleting the reservation" });
+  }
+};
+
+const updateReservation = async (req, res) => {
+  try {
+    const updatedReservation = await ReservationService.updateReservation(
+      { _id: req.body.reservationId },
+      req.body
+    );
+
+    if (updatedReservation) {
+      return res.status(httpStatus.OK).send({ msg: "reservation updated successfully" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(httpStatus.BAD_GATEWAY)
+      .send({ msg: "An error was encountered while updating the reservation" });
+  }
+};
+
 module.exports = {
   isRoomAvailable,
+  deleteReservation,
+  updateReservation,
 };

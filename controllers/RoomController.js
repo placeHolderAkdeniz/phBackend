@@ -54,7 +54,7 @@ const createRoom = async (req, res) => {
 
           if (savedImages && savedImages.length > 0) {
             console.log("Room ve resimler başarıyla kaydedildi");
-            const imageIds = savedImages.map((image) => image._id);
+            const imageIds = savedImages.map((image) => image.path);
             console.log(imageIds);
             const updatedRoom = await RoomService.updateRoom(
               { _id: room._id },

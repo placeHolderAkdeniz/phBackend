@@ -25,4 +25,22 @@ const findUserReservations = (where) => {
   });
 };
 
-module.exports = { createReservation, isRoomAvailable, findUserReservations };
+const findReservationAndDelete = (where) => {
+  return ReservationModel.findByIdAndDelete(where);
+};
+const findReservation = (where) => {
+  return ReservationModel.find({ hotel: where.hotel });
+};
+
+const updateReservation = (id, data) => {
+  return ReservationModel.findByIdAndUpdate(id, data, { new: true });
+};
+
+module.exports = {
+  createReservation,
+  isRoomAvailable,
+  findUserReservations,
+  findReservationAndDelete,
+  updateReservation,
+  findReservation,
+};
