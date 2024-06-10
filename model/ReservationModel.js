@@ -12,6 +12,11 @@ const ReservationSchema = new Mongoose.Schema(
       ref: "user",
       required: true,
     },
+    hotel: {
+      type: Mongoose.Schema.Types.ObjectId,
+      ref: "hotel",
+      required: false,
+    },
     checkInDate: {
       type: Date,
       required: true,

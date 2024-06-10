@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, file.originalname);
+    cb(null, uniqueSuffix);
   },
 });
 const upload = multer({ storage });
@@ -20,6 +20,6 @@ router.route("/comments").get(hotelCommentList);
 router.route("/rooms").get(RoomController.index);
 router.route("/images").get(index);
 
-router.route("/").post(authenticate, upload.single("file"), createHotel);
+router.route("/").post(authenticate, upload.array("files"), createHotel);
 
 module.exports = { router };

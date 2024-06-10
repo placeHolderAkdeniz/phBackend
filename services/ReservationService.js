@@ -14,11 +14,15 @@ const createReservation = (where) => {
     checkInDate: where.checkInDate,
     checkOutDate: where.checkOutDate,
     user: where.user,
+    hotel: where.hotel,
   }).save();
 };
 
 const findUserReservations = (where) => {
-  return ReservationModel.find(where);
+  return ReservationModel.find(where).populate({
+    path: "room",
+    select: "hotel",
+  });
 };
 
 module.exports = { createReservation, isRoomAvailable, findUserReservations };

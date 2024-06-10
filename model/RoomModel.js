@@ -7,6 +7,12 @@ const RoomSchema = new Mongoose.Schema(
       ref: "hotel",
       required: true,
     },
+    image: [
+      {
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: "hotelImage",
+      },
+    ],
 
     price: Number,
     capacity: Number,

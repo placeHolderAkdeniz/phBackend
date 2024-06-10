@@ -169,11 +169,6 @@ const userCommentList = async (req, res) => {
           return { ...comment._doc, hotelInfo: hotel[0] };
         })
       );
-
-      // Güncellenmiş yorumları konsola yazdır
-      //console.log(commentsWithHotelInfo);
-
-      // Güncellenmiş yorumları istemciye geri gönder
       return res.status(httpStatus.OK).send({ comments: commentsWithHotelInfo });
     } else {
       return res.status(httpStatus.NOT_FOUND).send({ msg: "No user comments found" });
@@ -181,6 +176,16 @@ const userCommentList = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ error });
+  }
+};
+
+const deleteComment = (req, res) => {
+  if (req.user._id) {
+    CommentService.deleteComment(req.body.commentId).then((response) => {
+      if (response) {
+        return res.status(httpStatus.OK).send("yorum başarıyla silindi");
+      }
+    });
   }
 };
 
@@ -218,4 +223,5 @@ module.exports = {
   userReservation,
   addFavourite,
   deleteFavourite,
+  deleteComment,
 };

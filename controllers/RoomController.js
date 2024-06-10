@@ -2,7 +2,7 @@ const RoomService = require("../services/RoomService");
 const httpStatus = require("http-status");
 const HotelService = require("../services/HotelService");
 const ReservationService = require("../services/ReservationService");
-
+const HotelImageService = require("../services/HotelImageService");
 const index = async (req, res) => {
   req.body.hotel = null;
   if (req.query.hotelId != null) {
@@ -13,6 +13,18 @@ const index = async (req, res) => {
     return res.status(httpStatus.OK).send(rooms);
   }
   return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ msg: "odaları getirirken bir hata oluştu" });
+};
+
+const updateRoom = async (req, res) => {
+  try {
+    const rooms = await RoomService.updateRoom({ hotel: req.body.roomId }, req.body);
+    if (rooms) {
+      return res.status(httpStatus.OK).send(rooms);
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ msg: "odaları getirirken bir hata oluştu" });
+  }
 };
 
 const createRoom = async (req, res) => {
@@ -28,6 +40,36 @@ const createRoom = async (req, res) => {
     if (room) {
       const hotelWithRoom = await HotelService.updateHotel({ _id: req.body.hotel }, { rooms: room._id });
       if (hotelWithRoom) {
+        if (req.files && req.files.length > 0) {
+          console.log("with files");
+          const savedImages = await Promise.all(
+            req.files.map((file) =>
+              HotelImageService.uploadHotelImage({
+                hotel: room._id,
+                name: file.filename,
+                path: "https://phbackend-m3r9.onrender.com/uploads/" + file.filename,
+              })
+            )
+          );
+
+          if (savedImages && savedImages.length > 0) {
+            console.log("Room ve resimler başarıyla kaydedildi");
+            const imageIds = savedImages.map((image) => image._id);
+            console.log(imageIds);
+            const updatedRoom = await RoomService.updateRoom(
+              { _id: room._id },
+              { $push: { image: { $each: imageIds } } }
+            );
+            if (updatedRoom) {
+              return res.status(httpStatus.OK).send(updatedRoom);
+            } else {
+              console.log("update error");
+            }
+          }
+        } else {
+          console.log("without files");
+        }
+
         return res.status(httpStatus.OK).send(room);
       }
     } else {
@@ -91,4 +133,4 @@ const searchRoom = async (req, res) => {
   }
 };
 
-module.exports = { createRoom, index, deleteRoom, searchRoom };
+module.exports = { createRoom, index, deleteRoom, searchRoom, updateRoom };

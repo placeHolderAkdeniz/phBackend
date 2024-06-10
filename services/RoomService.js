@@ -16,7 +16,7 @@ const searchRoom = (where) => {
     select: "hotel_name _id city",
   });
 };
-const updateRoom = () => {
+const updateRoom = (where, data) => {
   return RoomModel.findOneAndUpdate(where, data, { new: true });
 };
 

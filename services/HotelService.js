@@ -8,15 +8,10 @@ const deleteHotel = (where) => {
 };
 
 const listHotel = (where) => {
-  return HotelModel.find(where || {})
-    .populate({
-      path: "image",
-      select: "name image",
-    })
-    .populate({
-      path: "comments",
-      select: "value likes",
-    });
+  return HotelModel.find(where || {}).populate({
+    path: "image",
+    select: "name image path",
+  });
 };
 
 const updateHotel = (where, data) => {
