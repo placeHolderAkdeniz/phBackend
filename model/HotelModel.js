@@ -49,8 +49,7 @@ const HotelSchema = new Mongoose.Schema(
 
     image: [
       {
-        type: Mongoose.Schema.Types.ObjectId,
-        ref: "hotelImage",
+        type: String,
       },
     ],
 

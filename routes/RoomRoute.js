@@ -2,6 +2,7 @@ const express = require("express");
 const { createRoom, deleteRoom, index, searchRoom, updateRoom } = require("../controllers/RoomController");
 const authenticate = require("../middlewares/authenticate");
 const router = express.Router();
+const path = require("path");
 const multer = require("multer");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -9,7 +10,8 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix);
+    const extension = path.extname(file.originalname);
+    cb(null, uniqueSuffix + extension);
   },
 });
 const upload = multer({ storage });

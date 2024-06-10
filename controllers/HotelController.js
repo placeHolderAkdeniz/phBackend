@@ -1,7 +1,7 @@
 const HotelService = require("../services/HotelService");
 const HotelImageService = require("../services/HotelImageService");
 const CommentService = require("../services/CommentService");
-
+const ReservationService = require("../services/ReservationService");
 const httpStatus = require("http-status");
 
 const createHotel = async (req, res) => {
@@ -32,7 +32,7 @@ const createHotel = async (req, res) => {
 
       if (savedImages && savedImages.length > 0) {
         console.log("Otel ve resimler başarıyla kaydedildi");
-        const imageIds = savedImages.map((image) => image._id);
+        const imageIds = savedImages.map((image) => image.path);
         console.log(imageIds);
         const updatedHotel = await HotelService.updateHotel(
           { _id: hotel._id },
@@ -76,10 +76,57 @@ const index = async (req, res) => {
   }
 };
 
+const getHotelsByAverageStar = async (req, res) => {
+  const hotel = await HotelService.getHotelsByAverageStar();
+  if (hotel) {
+    res.status(httpStatus.OK).send(hotel);
+  } else {
+    res.status(httpStatus.NOT_FOUND).send({ msg: "otel bulunamadı" });
+  }
+};
+
+const getHotelsByHygieneStar = async (req, res) => {
+  const hotel = await HotelService.getHotelsByHygieneStar();
+  if (hotel) {
+    res.status(httpStatus.OK).send(hotel);
+  } else {
+    res.status(httpStatus.NOT_FOUND).send({ msg: "otel bulunamadı" });
+  }
+};
+
+const getHotelsBySafetyStar = async (req, res) => {
+  const hotel = await HotelService.getHotelsBySafetyStar();
+  if (hotel) {
+    res.status(httpStatus.OK).send(hotel);
+  } else {
+    res.status(httpStatus.NOT_FOUND).send({ msg: "otel bulunamadı" });
+  }
+};
+
+const getHotelsByTransportationStar = async (req, res) => {
+  const hotel = await HotelService.getHotelsByTransportationStar();
+  if (hotel) {
+    res.status(httpStatus.OK).send(hotel);
+  } else {
+    res.status(httpStatus.NOT_FOUND).send({ msg: "otel bulunamadı" });
+  }
+};
+
 const hotelCommentList = (req, res) => {
   CommentService.listComment({ hotel: req.body?.hotelId }).then((response) => {
     if (response) {
       return res.status(httpStatus.OK).send({ comments: response });
+    } else {
+      return res.status(httpStatus.NOT_FOUND).send({ msg: "No user comments found" });
+    }
+  });
+};
+const hotelReservationList = (req, res) => {
+  console.log(req.body?.hotelId);
+
+  ReservationService.findReservation({ hotel: req.body?.hotelId }).then((response) => {
+    if (response) {
+      return res.status(httpStatus.OK).send({ reservations: response });
     } else {
       return res.status(httpStatus.NOT_FOUND).send({ msg: "No user comments found" });
     }
@@ -99,4 +146,13 @@ const hotelImageList = (req, res) => {
   }
 };
 
-module.exports = { createHotel, index, hotelCommentList };
+module.exports = {
+  createHotel,
+  index,
+  hotelCommentList,
+  hotelReservationList,
+  getHotelsByAverageStar,
+  getHotelsByHygieneStar,
+  getHotelsBySafetyStar,
+  getHotelsByTransportationStar,
+};
