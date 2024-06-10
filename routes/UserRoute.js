@@ -11,6 +11,7 @@ const {
   userReservation,
   addFavourite,
   deleteFavourite,
+  deleteComment,
 } = require("../controllers/UserController");
 const authenticate = require("../middlewares/authenticate");
 const router = express.Router();
@@ -22,7 +23,7 @@ router.route("/my-bookings").get(authenticate, userReservation);
 router.route("/my-hotel").get(authenticate, getMyHotel);
 // Implemented endpoint to retrieve comments of authenticated user
 router.route("/comments").get(authenticate, userCommentList);
-
+router.route("/comments").delete(authenticate, deleteComment);
 // Implemented endpoint to create a new user
 router.route("/").post(createUser);
 

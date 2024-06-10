@@ -46,22 +46,14 @@ const HotelSchema = new Mongoose.Schema(
       type: String,
       required: true,
     },
-    reservations: [
-      {
-        type: Mongoose.Types.ObjectId,
-        ref: "reservation",
-      },
-    ],
-    image: {
-      type: Mongoose.Schema.Types.ObjectId,
-      ref: "hotelImage",
-    },
-    comments: [
+
+    image: [
       {
         type: Mongoose.Schema.Types.ObjectId,
-        ref: "comment",
+        ref: "hotelImage",
       },
     ],
+
     rooms: {
       type: Mongoose.Schema.Types.ObjectId,
       ref: "room",

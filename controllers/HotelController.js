@@ -5,32 +5,39 @@ const CommentService = require("../services/CommentService");
 const httpStatus = require("http-status");
 
 const createHotel = async (req, res) => {
-  if (req.user.isAdmin == false || req.user.isAdmin == null) {
-    return res.status(httpStatus.NOT_ACCEPTABLE).send({ msg: "you dont have a permission to do that" });
+  console.log("aaaaaaaaaaaaaa");
+  if (!req.user.isAdmin) {
+    return res.status(httpStatus.NOT_ACCEPTABLE).send({ msg: "You don't have permission to do that" });
   }
+
   req.body.ownerEmail = req.user.email;
+
   try {
     const hotel = await HotelService.createHotel(req.body);
-    console.log(req.file);
-
     if (!hotel) {
       return res.status(httpStatus.BAD_REQUEST).send({ error: "Otel oluşturulamadı" });
     }
-    if (req.file) {
-      console.log("with file");
-      console.log(req.file.originalname);
-      console.log(req.file.mimetype);
-      console.log(req.file.path);
 
-      const savedImage = await HotelImageService.uploadHotelImage({
-        hotel: hotel._id,
-        name: req.file.originalname,
-        path: req.file.originalname,
-      });
-      if (savedImage) {
-        console.log("Otel ve resim başarıyla kaydedildi");
-        console.log(savedImage._id);
-        const updatedHotel = await HotelService.updateHotel({ _id: hotel._id }, { image: savedImage._id });
+    if (req.files && req.files.length > 0) {
+      console.log("with files");
+      const savedImages = await Promise.all(
+        req.files.map((file) =>
+          HotelImageService.uploadHotelImage({
+            hotel: hotel._id,
+            name: file.filename,
+            path: "https://phbackend-m3r9.onrender.com/uploads/" + file.filename,
+          })
+        )
+      );
+
+      if (savedImages && savedImages.length > 0) {
+        console.log("Otel ve resimler başarıyla kaydedildi");
+        const imageIds = savedImages.map((image) => image._id);
+        console.log(imageIds);
+        const updatedHotel = await HotelService.updateHotel(
+          { _id: hotel._id },
+          { $push: { image: { $each: imageIds } } }
+        );
         if (updatedHotel) {
           return res.status(httpStatus.OK).send(updatedHotel);
         } else {
@@ -38,17 +45,17 @@ const createHotel = async (req, res) => {
         }
       }
     } else {
-      console.log("without file");
+      console.log("without files");
     }
 
     return res.status(httpStatus.OK).send(hotel);
   } catch (error) {
-    return res.status(httpStatus.BAD_REQUEST).send({ msg: error });
+    console.error(error);
+    return res.status(httpStatus.BAD_REQUEST).send({ msg: error.message });
   }
 };
 
 const index = async (req, res) => {
-  console.log(req.body);
   // if (req.query.city == "all") {
   //   console.log(req.query);
   // }

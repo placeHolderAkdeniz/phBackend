@@ -1,5 +1,5 @@
 const express = require("express");
-const { createRoom, deleteRoom, index, searchRoom } = require("../controllers/RoomController");
+const { createRoom, deleteRoom, index, searchRoom, updateRoom } = require("../controllers/RoomController");
 const authenticate = require("../middlewares/authenticate");
 const router = express.Router();
 const multer = require("multer");
@@ -9,14 +9,15 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, file.originalname);
+    cb(null, uniqueSuffix);
   },
 });
 const upload = multer({ storage });
 
 router.route("/").get(index);
+router.route("/").patch(updateRoom);
 router.route("/search-rooms").get(searchRoom);
 router.route("/images").get(index);
-router.route("/").post(authenticate, upload.single("file"), createRoom);
+router.route("/").post(authenticate, upload.array("files"), createRoom);
 
 module.exports = { router };

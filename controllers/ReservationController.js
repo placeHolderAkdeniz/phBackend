@@ -77,8 +77,10 @@ const isRoomAvailable = async (req, res) => {
 
     // Rezervasyon verilerini güncelle
     req.body.roomId = selectedRoom._id;
-
-    // Yeni rezervasyon oluştur
+    req.body.hotel = selectedRoom.hotel._id;
+    console.log(selectedRoom.hotel._id);
+    // Yeni rezervasyon oluştu
+    console.log(req.body);
     const newReservation = await ReservationService.createReservation(req.body);
 
     if (!newReservation) {
