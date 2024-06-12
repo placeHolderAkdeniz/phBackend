@@ -7,7 +7,7 @@ const createComment = (data) => {
 const listComment = (where) => {
   return CommentModel.find(where || {}).populate({
     path: "user",
-    select: "first_name last_name userType _id",
+    select: "first_name last_name userType _id userType",
   });
 };
 
