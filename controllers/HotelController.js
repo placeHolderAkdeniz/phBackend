@@ -3,13 +3,28 @@ const HotelImageService = require("../services/HotelImageService");
 const CommentService = require("../services/CommentService");
 const ReservationService = require("../services/ReservationService");
 const httpStatus = require("http-status");
+const fs = require("fs");
+const path = require("path");
+
+const klasorYolu = path.join(__dirname, "../uploads");
 
 const createHotel = async (req, res) => {
   console.log("aaaaaaaaaaaaaa");
   if (!req.user.isAdmin) {
     return res.status(httpStatus.NOT_ACCEPTABLE).send({ msg: "You don't have permission to do that" });
   }
+  fs.readdir(klasorYolu, (err, dosyaListesi) => {
+    if (err) {
+      console.error("Klasör okunamadı:", err);
+      return;
+    }
 
+    // Dosyaları konsola yazdır
+    console.log("Klasördeki Dosyalar:");
+    dosyaListesi.forEach((dosya) => {
+      console.log(dosya);
+    });
+  });
   req.body.ownerEmail = req.user.email;
 
   try {
