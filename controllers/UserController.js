@@ -71,7 +71,6 @@ const getMyHotel = (req, res) => {
     .catch((e) => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(e));
 };
 
-//  Implement user login controller
 const login = (req, res) => {
   req.body.password = passwordToHash(req.body.password);
   console.log(req.body.password);
