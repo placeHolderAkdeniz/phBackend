@@ -4,7 +4,10 @@ const CommentService = require("../services/CommentService");
 const ReservationService = require("../services/ReservationService");
 const httpStatus = require("http-status");
 const fs = require("fs");
-const klasorYolu = "phBackend/uploads";
+const path = require("path");
+
+const klasorYolu = path.join(__dirname, "../uploads");
+
 const createHotel = async (req, res) => {
   console.log("aaaaaaaaaaaaaa");
   if (!req.user.isAdmin) {
@@ -16,7 +19,7 @@ const createHotel = async (req, res) => {
       return;
     }
 
-    // Dosyaları konsola yazdırın
+    // Dosyaları konsola yazdır
     console.log("Klasördeki Dosyalar:");
     dosyaListesi.forEach((dosya) => {
       console.log(dosya);
