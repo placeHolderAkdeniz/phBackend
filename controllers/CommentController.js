@@ -85,6 +85,7 @@ const createComment = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    return res.status(httpStatus.BAD_REQUEST).send({ msg: error.message });
   }
 };
 
