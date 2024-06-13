@@ -8,7 +8,11 @@ const isRoomAvailable = async (req, res) => {
 
   try {
     // İlgili oteldeki tüm odaları getir
-    const findRoom = await RoomService.listRoom({ hotel: req.body.hotelId, capacity: req.body.personCount });
+    const findRoom = await RoomService.listRoom({
+      hotel: req.body.hotelId,
+      capacity: req.body.personCount,
+      price: req.body.price,
+    });
 
     // Her oda için uygunluk kontrolü yap
     const availableRoomsPromises = findRoom.map(async (room) => {
@@ -37,6 +41,7 @@ const isRoomAvailable = async (req, res) => {
     // Rezervasyon verilerini güncelle
     req.body.roomId = selectedRoom._id;
     req.body.hotel = selectedRoom.hotel._id;
+    //req.body.roomPrice = selectedRoom.price;
     console.log(selectedRoom.hotel._id);
     // Yeni rezervasyon oluştu
     console.log(req.body);

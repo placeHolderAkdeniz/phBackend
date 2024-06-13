@@ -5,6 +5,7 @@ const isRoomAvailable = (where) => {
     room: where.roomId,
 
     $or: [{ checkInDate: { $lte: where.checkOutDate }, checkOutDate: { $gte: where.checkInDate } }],
+    // price: { $lte: where.price },
   });
 };
 
