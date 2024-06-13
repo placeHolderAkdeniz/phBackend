@@ -5,10 +5,15 @@ const createComment = (data) => {
 };
 
 const listComment = (where) => {
-  return CommentModel.find(where || {}).populate({
-    path: "user",
-    select: "first_name last_name userType _id userType",
-  });
+  return CommentModel.find(where || {})
+    .populate({
+      path: "user",
+      select: "first_name last_name userType _id userType",
+    })
+    .populate({
+      path: "hotel",
+      select: "hotel_name",
+    });
 };
 
 const updateComment = () => {
