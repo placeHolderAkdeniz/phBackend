@@ -5,11 +5,18 @@ const createRoom = (data) => {
 };
 
 const listRoom = (where) => {
-  return RoomModel.find(where || {}).populate({
+  const query = where || {};
+
+  if (where && where.price !== undefined) {
+    query.price = { $lte: where.price };
+  }
+
+  return RoomModel.find(query).populate({
     path: "hotel",
     select: "hotel_name _id city",
   });
 };
+
 const searchRoom = (where) => {
   return RoomModel.find(where || {}).populate({
     path: "hotel",

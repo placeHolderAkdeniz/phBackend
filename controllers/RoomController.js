@@ -32,7 +32,7 @@ const createRoom = async (req, res) => {
     return res.status(httpStatus.NOT_ACCEPTABLE).send({ msg: "you dont have a permission to do that" });
   }
   req.body.user = req.user?._id;
-  req.body.hotel = req.query.hotelId;
+  // req.body.hotel = req.query.hotelId;
   console.log(req.body);
 
   try {
@@ -94,7 +94,7 @@ const searchRoom = async (req, res) => {
 
     // Tüm otellerin odalarını paralel olarak getiriyoruz
     const allRoomsPromises = hotels.map((hotel) =>
-      RoomService.listRoom({ hotel: hotel._id, capacity: req.body.personCount })
+      RoomService.listRoom({ hotel: hotel._id, capacity: req.body.personCount, price: req.body.price })
     );
     const allRoomsArray = await Promise.all(allRoomsPromises);
 
