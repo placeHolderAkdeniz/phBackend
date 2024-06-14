@@ -129,13 +129,18 @@ const getHotelsByTransportationStar = async (req, res) => {
 
 const hotelCommentList = (req, res) => {
   req.body.hotelId = req.query.hotelId;
-  CommentService.listComment({ hotel: req.body?.hotelId }).then((response) => {
-    if (response) {
-      return res.status(httpStatus.OK).send({ comments: response });
-    } else {
-      return res.status(httpStatus.NOT_FOUND).send({ msg: "No user comments found" });
-    }
-  });
+  try {
+    CommentService.listComment({ hotel: req.body?.hotelId }).then((response) => {
+      if (response) {
+        return res.status(httpStatus.OK).send({ comments: response });
+      } else {
+        return res.status(httpStatus.NOT_FOUND).send({ msg: "No user comments found" });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(httpStatus.NOT_FOUND).send(error);
+  }
 };
 const hotelReservationList = (req, res) => {
   console.log(req.body?.hotelId);
