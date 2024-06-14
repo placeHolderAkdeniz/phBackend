@@ -83,7 +83,7 @@ const index = async (req, res) => {
   // }
   // console.log(req.query);
 
-  const hotel = await HotelService.listHotel(req.query.id);
+  const hotel = await HotelService.listHotel({ _id: req.query.id });
   if (hotel) {
     res.status(httpStatus.OK).send(hotel);
   } else {
