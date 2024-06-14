@@ -1,6 +1,6 @@
 # Node.js geçici dosyaları
 node_modules/
-
+uploads/
 # Yerel yapılandırma dosyaları
 .env
 
