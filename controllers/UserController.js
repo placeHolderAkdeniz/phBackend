@@ -168,6 +168,7 @@ const userCommentList = async (req, res) => {
           return { ...comment._doc, hotelInfo: hotel[0] };
         })
       );
+      console.log(commentsWithHotelInfo);
       return res.status(httpStatus.OK).send({ comments: commentsWithHotelInfo });
     } else {
       return res.status(httpStatus.NOT_FOUND).send({ msg: "No user comments found" });
