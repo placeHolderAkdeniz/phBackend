@@ -20,10 +20,19 @@ const createReservation = (where) => {
 };
 
 const findUserReservations = (where) => {
-  return ReservationModel.find(where).populate({
-    path: "room",
-    select: "hotel",
-  });
+  return ReservationModel.find(where)
+    .populate({
+      path: "room",
+      select: "hotel",
+    })
+    .populate({
+      path: "hotel",
+      select: "hotel_name city",
+    })
+    .populate({
+      path: "user",
+      select: "first_name last_name",
+    });
 };
 
 const findReservationAndDelete = (where) => {
