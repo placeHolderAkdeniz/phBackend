@@ -82,12 +82,17 @@ const index = async (req, res) => {
   //   req.body = req.user?.city;
   // }
   // console.log(req.query);
-  console.log(req.query);
-  const hotel = await HotelService.listHotel(req.query);
-  if (hotel) {
-    res.status(httpStatus.OK).send(hotel);
-  } else {
-    res.status(httpStatus.NOT_FOUND).send({ msg: "otel bulunamadı" });
+  try {
+    console.log(req.query);
+    const hotel = await HotelService.listHotel(req.query);
+    if (hotel) {
+      res.status(httpStatus.OK).send(hotel);
+    } else {
+      res.status(httpStatus.NOT_FOUND).send({ msg: "otel bulunamadı" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(httpStatus.NOT_FOUND).send(error);
   }
 };
 
