@@ -89,6 +89,11 @@ const deleteRoom = async (req, res) => {
 };
 
 const searchRoom = async (req, res) => {
+  req.body.city = req.query.city;
+  req.body.checkInDate = req.query.city;
+  req.body.checkOutDate = req.query.city;
+  req.body.personCount = req.query.city;
+  req.body.price = req.query.city;
   try {
     const hotels = await HotelService.listHotel({ city: req.body.city });
 
