@@ -82,12 +82,17 @@ const index = async (req, res) => {
   //   req.body = req.user?.city;
   // }
   // console.log(req.query);
-  console.log(req.query);
-  const hotel = await HotelService.listHotel(req.query);
-  if (hotel) {
-    res.status(httpStatus.OK).send(hotel);
-  } else {
-    res.status(httpStatus.NOT_FOUND).send({ msg: "otel bulunamadı" });
+  try {
+    console.log(req.query);
+    const hotel = await HotelService.listHotel(req.query);
+    if (hotel) {
+      res.status(httpStatus.OK).send(hotel);
+    } else {
+      res.status(httpStatus.NOT_FOUND).send({ msg: "otel bulunamadı" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(httpStatus.NOT_FOUND).send(error);
   }
 };
 
@@ -129,13 +134,18 @@ const getHotelsByTransportationStar = async (req, res) => {
 
 const hotelCommentList = (req, res) => {
   req.body.hotelId = req.query.hotelId;
-  CommentService.listComment({ hotel: req.body?.hotelId }).then((response) => {
-    if (response) {
-      return res.status(httpStatus.OK).send({ comments: response });
-    } else {
-      return res.status(httpStatus.NOT_FOUND).send({ msg: "No user comments found" });
-    }
-  });
+  try {
+    CommentService.listComment({ hotel: req.body?.hotelId }).then((response) => {
+      if (response) {
+        return res.status(httpStatus.OK).send({ comments: response });
+      } else {
+        return res.status(httpStatus.NOT_FOUND).send({ msg: "No user comments found" });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(httpStatus.NOT_FOUND).send(error);
+  }
 };
 const hotelReservationList = (req, res) => {
   console.log(req.body?.hotelId);
