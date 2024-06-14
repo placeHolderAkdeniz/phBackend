@@ -39,6 +39,7 @@ const createRoom = async (req, res) => {
     const room = await RoomService.createRoom(req.body);
     if (room) {
       const hotelWithRoom = await HotelService.updateHotel({ _id: req.body.hotel }, { rooms: room._id });
+      console.log(hotelWithRoom + "aaaa");
       if (hotelWithRoom) {
         if (req.files && req.files.length > 0) {
           console.log("with files");
@@ -55,6 +56,7 @@ const createRoom = async (req, res) => {
           if (savedImages && savedImages.length > 0) {
             console.log("Room ve resimler başarıyla kaydedildi");
             const imageIds = savedImages.map((image) => image.path);
+            console.log(imageIds);
             console.log(imageIds);
             const updatedRoom = await RoomService.updateRoom(
               { _id: room._id },

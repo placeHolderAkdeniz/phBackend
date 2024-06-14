@@ -25,7 +25,7 @@ const createComment = async (req, res) => {
 
     startCoefficient[req.user.userType];
 
-    const tempHotel = await HotelService.listHotel({ _id: req.body.hotel });
+    const tempHotel = await HotelService.listHotel({ _id: req.query.hotelId });
     console.log(tempHotel);
     const oldSafety_star = tempHotel[0].safety_star;
     const oldTransportation_star = tempHotel[0].transportation_star;
@@ -33,8 +33,9 @@ const createComment = async (req, res) => {
 
     const commentsAll = await CommentService.listComment({ hotel: req.body.hotel });
     var oldCof = 0;
-    commentsAll.map((comment) => (oldCof += startCoefficient[comment.user.userType]));
 
+    commentsAll.map((comment) => (oldCof += startCoefficient[comment.user.userType]));
+    console.log(commentsAll);
     const totalOldSafety_star = oldCof * oldSafety_star;
     const totalOldTransportation_star = oldCof * oldTransportation_star;
     const totalOldHygiene_star = oldCof * oldHygiene_star;
@@ -64,7 +65,7 @@ const createComment = async (req, res) => {
       }
 
       const hotelWithComment = await HotelService.updateHotel(
-        { _id: req.body.hotel },
+        { _id: req.query.hotelId },
         {
           transportation_star: newTransportationStar.toFixed(1),
           hygiene_star: newHygieneStar.toFixed(1),
