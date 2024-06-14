@@ -22,11 +22,11 @@ const createComment = async (req, res) => {
   }
   try {
     req.body.user = req.user?._id;
-
+    req.body.hotel = req.query.hotelId;
     startCoefficient[req.user.userType];
 
     const tempHotel = await HotelService.listHotel({ _id: req.query.hotelId });
-    console.log(tempHotel);
+    console.log(tempHotel + "ada");
     const oldSafety_star = tempHotel[0].safety_star;
     const oldTransportation_star = tempHotel[0].transportation_star;
     const oldHygiene_star = tempHotel[0].hygiene_star;
