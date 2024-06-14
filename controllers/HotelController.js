@@ -128,6 +128,7 @@ const getHotelsByTransportationStar = async (req, res) => {
 };
 
 const hotelCommentList = (req, res) => {
+  req.body.hotelId = req.query.hotelId;
   CommentService.listComment({ hotel: req.body?.hotelId }).then((response) => {
     if (response) {
       return res.status(httpStatus.OK).send({ comments: response });
@@ -138,7 +139,7 @@ const hotelCommentList = (req, res) => {
 };
 const hotelReservationList = (req, res) => {
   console.log(req.body?.hotelId);
-
+  req.body.hotelId = req.query.hotelId;
   ReservationService.findReservation({ hotel: req.body?.hotelId }).then((response) => {
     if (response) {
       return res.status(httpStatus.OK).send({ reservations: response });
