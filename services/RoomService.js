@@ -21,6 +21,11 @@ const listRoom = (where) => {
   if (where.totalCapacity !== undefined) {
     remain.totalCapacity = { $gte: where.totalCapacity };
   }
+
+  if (where.features !== undefined) {
+    remain.features = { $all: where.features };
+  }
+
   console.log(remain);
   return RoomModel.find(remain).populate({
     path: "hotel",
