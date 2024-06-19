@@ -32,7 +32,7 @@ router.route("/safety-star").get(getHotelsBySafetyStar);
 router.route("/transportation-star").get(getHotelsByTransportationStar);
 router.route("/comments").get(hotelCommentList);
 router.route("/bookings").get(hotelReservationList);
-router.route("/rooms").get(RoomController.index);
+router.route("/rooms").get(RoomController.searchRoomOfOneHotel);
 router.route("/images").get(index);
 
 router.route("/").post(authenticate, upload.array("files"), createHotel);

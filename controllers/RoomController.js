@@ -4,11 +4,7 @@ const HotelService = require("../services/HotelService");
 const ReservationService = require("../services/ReservationService");
 const HotelImageService = require("../services/HotelImageService");
 const index = async (req, res) => {
-  req.body.hotel = null;
-  if (req.query.hotelId != null) {
-    req.body.hotel = req.query.hotelId;
-  }
-  const rooms = await RoomService.listRoom({ hotel: req.body.hotel });
+  const rooms = await RoomService.listRoom(req.query);
   if (rooms) {
     return res.status(httpStatus.OK).send(rooms);
   }
@@ -34,11 +30,14 @@ const createRoom = async (req, res) => {
   req.body.user = req.user?._id;
   // req.body.hotel = req.query.hotelId;
   console.log(req.body);
-
+  req.body.totalCapacity = Number(req.body.child) + Number(req.body.adult);
   try {
     const room = await RoomService.createRoom(req.body);
     if (room) {
-      const hotelWithRoom = await HotelService.updateHotel({ _id: req.body.hotel }, { rooms: room._id });
+      const hotelWithRoom = await HotelService.updateHotel(
+        { _id: req.body.hotel },
+        { $push: { rooms: room._id } }
+      );
       console.log(hotelWithRoom + "aaaa");
       if (hotelWithRoom) {
         if (req.files && req.files.length > 0) {
@@ -91,19 +90,17 @@ const deleteRoom = async (req, res) => {
 };
 
 const searchRoom = async (req, res) => {
-  req.body.city = req.query.city;
-  req.body.checkInDate = req.query.checkInDate;
-  req.body.checkOutDate = req.query.checkOutDate;
-  req.body.personCount = req.query.personCount;
-  req.body.price = req.query.price;
-  console.log(req.body);
+  req.query.totalCapacity = Number(req.query.child) + Number(req.query.adult);
   try {
-    const hotels = await HotelService.listHotel({ city: req.body.city });
+    const hotels = await HotelService.listHotel({ city: req.query.city, average_star: req.query.averageStar });
 
     // Tüm otellerin odalarını paralel olarak getiriyoruz
-    const allRoomsPromises = hotels.map((hotel) =>
-      RoomService.listRoom({ hotel: hotel._id, capacity: req.body.personCount, price: req.body.price })
-    );
+    const allRoomsPromises = hotels.map((hotel) => {
+      req.query.hotel = hotel._id;
+      const { city, checkInDate, checkOutDate, averageStar, child, adult, ...remaining } = req.query;
+
+      return RoomService.listRoom(remaining);
+    });
     const allRoomsArray = await Promise.all(allRoomsPromises);
 
     const allRooms = allRoomsArray.flat(); // Tüm oda listelerini tek bir diziye düzleştirir
@@ -112,9 +109,9 @@ const searchRoom = async (req, res) => {
     const suitableRoomsPromises = allRooms.map(async (room) => {
       const isAvailable = await ReservationService.isRoomAvailable({
         roomId: room._id,
-        checkInDate: req.body.checkInDate,
-        checkOutDate: req.body.checkOutDate,
-        capacity: req.body.personCount,
+        checkInDate: req.query.checkInDate,
+        checkOutDate: req.query.checkOutDate,
+        capacity: req.query.personCount,
       });
       return isAvailable.length === 0 ? room : null;
     });
@@ -141,4 +138,49 @@ const searchRoom = async (req, res) => {
   }
 };
 
-module.exports = { createRoom, index, deleteRoom, searchRoom, updateRoom };
+const searchRoomOfOneHotel = async (req, res) => {
+  req.query.totalCapacity = Number(req.query.child) + Number(req.query.adult);
+  try {
+    const hotel = await HotelService.listHotel({ _id: req.query.hotel });
+
+    // Tüm otellerin odalarını paralel olarak getiriyoruz
+
+    const { city, checkInDate, checkOutDate, averageStar, child, adult, ...remaining } = req.query;
+
+    const roomsOfHotel = await RoomService.listRoom(remaining);
+
+    // Tüm odaların uygunluk kontrolünü paralel olarak yapıyoruz
+    const suitableRoomsPromises = roomsOfHotel.map(async (room) => {
+      const isAvailable = await ReservationService.isRoomAvailable({
+        roomId: room._id,
+        checkInDate: req.query.checkInDate,
+        checkOutDate: req.query.checkOutDate,
+        capacity: req.query.personCount,
+      });
+      return isAvailable.length === 0 ? room : null;
+    });
+
+    // Uygun odaları filtreliyoruz
+    const suitableRoomsResults = await Promise.all(suitableRoomsPromises);
+    const suitableRooms = suitableRoomsResults.filter((room) => room !== null);
+
+    // Aynı otelde olan odalardan sadece bir tanesini döndürmek için filtreleme yapıyoruz
+    const uniqueRooms = [];
+    const seenHotels = new Set();
+
+    for (const room of suitableRooms) {
+      console.log(room.title);
+      if (!seenHotels.has(room.title)) {
+        uniqueRooms.push(room);
+        seenHotels.add(room.title);
+      }
+    }
+
+    res.status(200).json(uniqueRooms);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred while searching for rooms." });
+  }
+};
+
+module.exports = { createRoom, index, deleteRoom, searchRoom, updateRoom, searchRoomOfOneHotel };

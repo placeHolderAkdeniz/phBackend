@@ -10,6 +10,7 @@ const HotelSchema = new Mongoose.Schema(
       type: String,
       required: true,
     },
+
     city: {
       type: String,
       required: true,
@@ -52,17 +53,29 @@ const HotelSchema = new Mongoose.Schema(
         type: String,
       },
     ],
-
-    rooms: {
-      type: Mongoose.Schema.Types.ObjectId,
-      ref: "room",
+    distance: {
+      type: String,
+      required: true,
     },
+    rooms: [
+      {
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: "room",
+      },
+    ],
     features: [
       {
         type: String,
       },
     ],
+
+    featured: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
+
   { versionKey: false, timestamps: true }
 );
 module.exports = Mongoose.model("hotel", HotelSchema);

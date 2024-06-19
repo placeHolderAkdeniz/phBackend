@@ -3,17 +3,28 @@ const RoomModel = require("../model/RoomModel");
 const createRoom = (data) => {
   return new RoomModel(data).save();
 };
-
 const listRoom = (where) => {
   const query = where || {};
 
-  if (where && where.price !== undefined) {
-    query.price = { $lte: where.price };
+  if (where && where.priceMin !== undefined && where.priceMax !== undefined) {
+    query.price = {
+      $gte: where.priceMin,
+      $lte: where.priceMax,
+    };
+  } else if (where && where.priceMin !== undefined) {
+    query.price = { $gte: where.priceMin };
+  } else if (where && where.priceMax !== undefined) {
+    query.price = { $lte: where.priceMax };
   }
 
-  return RoomModel.find(query).populate({
+  const { priceMax, priceMin, ...remain } = query;
+  if (where.totalCapacity !== undefined) {
+    remain.totalCapacity = { $gte: where.totalCapacity };
+  }
+  console.log(remain);
+  return RoomModel.find(remain).populate({
     path: "hotel",
-    select: "hotel_name _id city",
+    select: "hotel_name _id city average_star",
   });
 };
 

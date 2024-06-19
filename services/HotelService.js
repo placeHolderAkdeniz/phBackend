@@ -8,6 +8,13 @@ const deleteHotel = (where) => {
 };
 
 const listHotel = (where) => {
+  if (where.average_star) {
+    where.average_star = { $in: where.average_star }; // $in operatörü ile dizi içindeki değerleri kontrol eder
+  } else {
+    // Eğer average_star alanı tanımlanmamışsa veya dizi şeklinde değilse
+    delete where.average_star;
+  }
+
   return HotelModel.find(where || {}).populate({
     path: "image",
     select: "name image path",
