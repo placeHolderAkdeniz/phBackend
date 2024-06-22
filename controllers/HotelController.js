@@ -40,7 +40,7 @@ const createHotel = async (req, res) => {
           HotelImageService.uploadHotelImage({
             hotel: hotel._id,
             name: file.filename,
-            path: "https://phbackend-m3r9.onrender.com/uploads/" + file.filename,
+            path: "https://phbackend-9rp2.onrender.com/uploads/" + file.filename,
           })
         )
       );
