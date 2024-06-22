@@ -17,10 +17,11 @@ app.use(express.json());
 
 app.use("/uploads", express.static(path.join(__dirname, "./", "uploads")));
 dotenv.config();
-
+console.log("aaaaaaaaaaaaaa");
 connectDB();
 
 app.listen(10000, () => {
+  console.log("bbbbbbbbbbbbbbb");
   console.log("sunucu çalışıyor");
   app.use("/users", UserRoutes.router);
   app.use("/hotels", HotelRoutes.router);
