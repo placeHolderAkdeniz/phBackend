@@ -5,26 +5,14 @@ const ReservationService = require("../services/ReservationService");
 const httpStatus = require("http-status");
 const fs = require("fs");
 const path = require("path");
-
-const klasorYolu = path.join(__dirname, "../uploads");
+const cloudinary = require("../cloudinaryConfig");
 
 const createHotel = async (req, res) => {
-  console.log("aaaaaaaaaaaaaa");
+  console.log("Creating hotel");
   if (!req.user.isAdmin) {
     return res.status(httpStatus.NOT_ACCEPTABLE).send({ msg: "You don't have permission to do that" });
   }
-  fs.readdir(klasorYolu, (err, dosyaListesi) => {
-    if (err) {
-      console.error("Klasör okunamadı:", err);
-      return;
-    }
 
-    // Dosyaları konsola yazdır
-    console.log("Klasördeki Dosyalar:");
-    dosyaListesi.forEach((dosya) => {
-      console.log(dosya);
-    });
-  });
   req.body.ownerEmail = req.user.email;
 
   try {
@@ -34,21 +22,31 @@ const createHotel = async (req, res) => {
     }
 
     if (req.files && req.files.length > 0) {
-      console.log("with files");
+      console.log("Uploading files to Cloudinary");
       const savedImages = await Promise.all(
-        req.files.map((file) =>
-          HotelImageService.uploadHotelImage({
-            hotel: hotel._id,
-            name: file.filename,
-            path: "https://phbackend-9rp2.onrender.com/uploads/" + file.filename,
-          })
-        )
+        req.files.map(async (file) => {
+          console.log(file);
+          try {
+            const result = await cloudinary.uploader.upload(file.path, {
+              folder: "hotels", // Optional: specify a folder in Cloudinary
+              public_id: file.filename, // Optional: specify a public ID
+            });
+
+            return {
+              hotel: hotel._id,
+              name: result.public_id,
+              path: result.secure_url,
+            };
+          } catch (error) {
+            console.error("Error uploading to Cloudinary:", error);
+            throw new Error("Cloudinary upload failed");
+          }
+        })
       );
-      console.log("z");
+
       if (savedImages && savedImages.length > 0) {
         console.log("Otel ve resimler başarıyla kaydedildi");
         const imageIds = savedImages.map((image) => image.path);
-        console.log(imageIds);
         const updatedHotel = await HotelService.updateHotel(
           { _id: hotel._id },
           { $push: { image: { $each: imageIds } } }

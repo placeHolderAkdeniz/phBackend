@@ -15,7 +15,7 @@ const fs = require("fs");
 const app = express();
 app.use(cors());
 app.use(express.json());
-
+dotenv.config();
 const uploadFolderPath = path.join(__dirname, "./uploads");
 
 // Klasörü kontrol et ve oluştur
@@ -24,12 +24,10 @@ if (!fs.existsSync(uploadFolderPath)) {
 }
 
 app.use("/uploads", express.static(path.join(__dirname, "./", "uploads")));
-dotenv.config();
-console.log("aaaaaaaaaaaaaa");
+
 connectDB();
 
 app.listen(10000, () => {
-  console.log("bbbbbbbbbbbbbbb");
   console.log("sunucu çalışıyor");
   app.use("/users", UserRoutes.router);
   app.use("/hotels", HotelRoutes.router);
