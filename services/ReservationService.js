@@ -39,7 +39,19 @@ const findReservationAndDelete = (where) => {
   return ReservationModel.findByIdAndDelete(where);
 };
 const findReservation = (where) => {
-  return ReservationModel.find({ hotel: where.hotel });
+  return ReservationModel.find({ hotel: where.hotel })
+    .populate({
+      path: "hotel",
+      select: "hotel_name city",
+    })
+    .populate({
+      path: "user",
+      select: "first_name last_name",
+    })
+    .populate({
+      path: "room",
+      select: "title",
+    });
 };
 
 const updateReservation = (id, data) => {
