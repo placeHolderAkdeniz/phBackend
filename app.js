@@ -10,10 +10,18 @@ const ReservationRoute = require("./routes/ReservationRoute");
 const path = require("path");
 const httpStatus = require("http-status");
 const cors = require("cors");
+const fs = require("fs");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+const uploadFolderPath = path.join(__dirname, "./uploads");
+
+// Klasörü kontrol et ve oluştur
+if (!fs.existsSync(uploadFolderPath)) {
+  fs.mkdirSync(uploadFolderPath);
+}
 
 app.use("/uploads", express.static(path.join(__dirname, "./", "uploads")));
 dotenv.config();
