@@ -44,7 +44,7 @@ const createHotel = async (req, res) => {
           })
         )
       );
-
+      console.log("z");
       if (savedImages && savedImages.length > 0) {
         console.log("Otel ve resimler başarıyla kaydedildi");
         const imageIds = savedImages.map((image) => image.path);
