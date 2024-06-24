@@ -73,6 +73,28 @@ const isRoomAvailable = async (req, res) => {
   }
 };
 
+const makeReservation = async (req, res) => {
+  req.body.user = req.user._id;
+  try {
+    const { hotel, user, ...remain } = req.body;
+    console.log(remain);
+
+    const check = await ReservationService.isRoomAvailable(remain);
+    console.log(check);
+    if (check.length != 0) {
+      return res.status(httpStatus.OK).send("bu oda belirtilen tarih aralığı için uygun değildir");
+    } else {
+      const newReservation = await ReservationService.createReservation(req.body);
+      if (newReservation) {
+        return res.status(httpStatus.OK).send("reservation created succesfully");
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(httpStatus.BAD_GATEWAY).send("An error was encountered while creating the reservation");
+  }
+};
+
 const deleteReservation = async (req, res) => {
   try {
     const deletedReservation = await ReservationService.findReservationAndDelete({
@@ -112,4 +134,5 @@ module.exports = {
   isRoomAvailable,
   deleteReservation,
   updateReservation,
+  makeReservation,
 };
