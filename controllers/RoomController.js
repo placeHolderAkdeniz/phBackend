@@ -13,7 +13,7 @@ const index = async (req, res) => {
 
 const updateRoom = async (req, res) => {
   try {
-    const rooms = await RoomService.updateRoom({ hotel: req.body.roomId }, req.body);
+    const rooms = await RoomService.updateRoom({ _id: req.body.roomId }, req.body);
     if (rooms) {
       return res.status(httpStatus.OK).send(rooms);
     }

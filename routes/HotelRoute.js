@@ -8,6 +8,7 @@ const {
   getHotelsByHygieneStar,
   getHotelsBySafetyStar,
   getHotelsByTransportationStar,
+  updateHotel,
 } = require("../controllers/HotelController");
 const RoomController = require("../controllers/RoomController");
 const authenticate = require("../middlewares/authenticate");
@@ -36,5 +37,6 @@ router.route("/rooms").get(RoomController.searchRoomOfOneHotel);
 router.route("/images").get(index);
 
 router.route("/").post(authenticate, upload.array("files"), createHotel);
+router.route("/").patch(authenticate, updateHotel);
 
 module.exports = { router };

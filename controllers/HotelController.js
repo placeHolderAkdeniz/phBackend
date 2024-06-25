@@ -170,6 +170,26 @@ const hotelImageList = (req, res) => {
   }
 };
 
+const updateHotel = async (req, res) => {
+  console.log("a");
+  if (req.user.isAdmin == false) {
+    return res.status(httpStatus.UNAUTHORIZED).send("admin yetkisi gerekmektedir");
+  }
+
+  try {
+    console.log(req.body);
+    const { hotelId, ...remain } = req.body;
+    const hotel = await HotelService.updateHotel({ _id: hotelId }, remain);
+    console.log(hotel);
+    if (hotel) {
+      return res.status(httpStatus.OK).send(hotel);
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ msg: "oteli getirirken bir hata oluştu" });
+  }
+};
+
 module.exports = {
   createHotel,
   index,
@@ -179,4 +199,5 @@ module.exports = {
   getHotelsByHygieneStar,
   getHotelsBySafetyStar,
   getHotelsByTransportationStar,
+  updateHotel,
 };
