@@ -23,7 +23,7 @@ const findUserReservations = (where) => {
   return ReservationModel.find(where)
     .populate({
       path: "room",
-      select: "hotel",
+      select: "hotel title",
     })
     .populate({
       path: "hotel",

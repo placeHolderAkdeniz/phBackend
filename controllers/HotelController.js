@@ -146,7 +146,6 @@ const hotelCommentList = (req, res) => {
   }
 };
 const hotelReservationList = (req, res) => {
-  console.log(req.body?.hotelId);
   req.body.hotelId = req.query.hotelId;
   ReservationService.findReservation({ hotel: req.body?.hotelId }).then((response) => {
     if (response) {
@@ -177,7 +176,7 @@ const updateHotel = async (req, res) => {
   }
 
   try {
-    console.log(req.body);
+    console.log(req.query);
     const { hotelId, ...remain } = req.body;
     const hotel = await HotelService.updateHotel({ _id: hotelId }, remain);
     console.log(hotel);
