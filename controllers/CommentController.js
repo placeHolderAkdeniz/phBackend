@@ -20,6 +20,14 @@ const createComment = async (req, res) => {
   if (req.user.isAdmin === true) {
     return res.status(httpStatus.NOT_ACCEPTABLE).send({ msg: "You don't have permission to do that" });
   }
+  const res0 = await ReservationService.findUserReservation({ user: req.user, hotel: req.query.hotelId });
+
+  if (!res0) {
+    return res
+      .status(httpStatus.NOT_ACCEPTABLE)
+      .send({ msg: "You don't have permission to do that without reservation" });
+  }
+
   try {
     req.body.user = req.user?._id;
     req.body.hotel = req.query.hotelId;

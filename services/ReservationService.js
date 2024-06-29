@@ -54,6 +54,22 @@ const findReservation = (where) => {
     });
 };
 
+const findUserReservation = (where) => {
+  return ReservationModel.find(where)
+    .populate({
+      path: "hotel",
+      select: "hotel_name city",
+    })
+    .populate({
+      path: "user",
+      select: "first_name last_name",
+    })
+    .populate({
+      path: "room",
+      select: "title",
+    });
+};
+
 const updateReservation = (id, data) => {
   return ReservationModel.findByIdAndUpdate(id, data, { new: true });
 };
@@ -65,4 +81,5 @@ module.exports = {
   findReservationAndDelete,
   updateReservation,
   findReservation,
+  findUserReservation,
 };
