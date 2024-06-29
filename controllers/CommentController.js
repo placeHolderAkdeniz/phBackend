@@ -17,7 +17,9 @@ const index = async (req, res) => {
   return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ msg: "yorumları getirirken bir hata oluştu" });
 };
 const createComment = async (req, res) => {
-  if (req.user.isAdmin !== true) {
+  console.log(req.user.isAdmin);
+
+  if (req.user.isAdmin === true) {
     return res.status(httpStatus.NOT_ACCEPTABLE).send({ msg: "You don't have permission to do that" });
   }
   const res0 = await ReservationService.findUserReservation({ user: req.user._id, hotel: req.query.hotelId });
